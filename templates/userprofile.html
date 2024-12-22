@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediAI - Your Health Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Brand Logo -->
+                <div class="flex items-center">
+                    <i class="fas fa-heartbeat text-3xl text-blue-600"></i>
+                    <span class="ml-3 text-2xl font-bold text-gray-800">MediAI</span>
+                </div>
+
+                <!-- User Profile or Authentication Buttons -->
+                <div class="flex items-center space-x-4">
+                    <!-- Navigation Links -->
+                    <div class="hidden md:flex items-center space-x-6">
+                        <button onclick="window.location.href='/'" class="text-blue-600 hover:text-blue-800 transition" >Home</button>
+                        <button onclick="window.location.href='/'" class="text-blue-600 hover:text-blue-800 transition" >About</button>
+                        <button onclick="window.location.href='/'" class="text-blue-600 hover:text-blue-800 transition" >Blog</button>
+                        <button onclick="window.location.href='/'" class="text-blue-600 hover:text-blue-800 transition">Developer</button>
+                        <button onclick="window.location.href='/contactus'" class="text-blue-600 hover:text-blue-800 transition">Contact-Us</button>
+                    </div>
+                    <!-- Replace this with server-side or client-side logic -->
+                    <div id="user-profile" class="relative">
+                        <!-- Profile Avatar -->
+                        {% if user_data %}
+                        <button class="flex items-center space-x-2 focus:outline-none">
+                            <img src="static\avtaar.avif" alt="User Avatar"
+                                class="w-10 h-10 rounded-full border border-gray-300">
+                            <span class="text-gray-800 font-medium">{{ user_data['username'] }}</span>
+                            <i class="fas fa-chevron-down text-gray-600"></i>
+                        </button>
+                        {% endif %}
+
+                        <!-- Dropdown Menu -->
+                        <div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2">
+                            <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+                            <a href="/settings" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Settings</a>
+                            <a href="/logout" class="block px-4 py-2 text-red-600 hover:bg-red-100">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Hero Section -->
+    <div class="container mx-auto px-6 py-16">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                Your Personalized Healthcare Assistant
+            </h1>
+            <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                Get personalized diet plans and medicine recommendations powered by advanced AI technology.
+            </p>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="container mx-auto px-6 pb-16">
+        <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <!-- Diet Plan Feature -->
+            <div class="bg-white rounded-xl shadow-lg p-8 transition duration-300 feature-card">
+                <div class="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-6">
+                    <i class="fas fa-utensils text-2xl text-blue-600"></i>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-900 mb-4">Personalized Diet Plan</h3>
+                <p class="text-gray-600 mb-6">
+                    Get customized diet recommendations based on your preferences, health conditions, and fitness goals.
+                </p>
+                <ul class="space-y-3 mb-6">
+                    <li class="flex items-center text-gray-600">
+                        <i class="fas fa-check text-green-500 mr-3"></i>
+                        Customized meal planning
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <i class="fas fa-check text-green-500 mr-3"></i>
+                        Dietary restrictions support
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <i class="fas fa-check text-green-500 mr-3"></i>
+                        Workout recommendations
+                    </li>
+                </ul>
+                <button onclick="get_diet('/diet-plan')"
+                    class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition">
+                    Get Diet Plan
+                </button>
+            </div>
+
+            <!-- Medicine Recommendations Feature -->
+            <div class="bg-white rounded-xl shadow-lg p-8 transition duration-300 feature-card">
+                <div class="flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-6">
+                    <i class="fas fa-pills text-2xl text-green-600"></i>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-900 mb-4">Medicine Recommendations</h3>
+                <p class="text-gray-600 mb-6">
+                    Receive intelligent medicine recommendations based on your symptoms and medical history.
+                </p>
+                <ul class="space-y-3 mb-6">
+                    <li class="flex items-center text-gray-600">
+                        <i class="fas fa-check text-green-500 mr-3"></i>
+                        Smart symptom analysis
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <i class="fas fa-check text-green-500 mr-3"></i>
+                        Drug interaction checks
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <i class="fas fa-check text-green-500 mr-3"></i>
+                        Personalized dosage info
+                    </li>
+                </ul>
+                <button onclick="get_medi('/medicine-recommendations')"
+                    class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition">
+                    Get Medicine Help
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Check Modal -->
+    <div id="authModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full">
+            <h3 class="text-2xl font-semibold text-gray-900 mb-4">Authentication Required</h3>
+            <p class="text-gray-600 mb-6">
+                Please log in or create an account to access this feature.
+            </p>
+            <div class="flex space-x-4">
+                <button onclick="window.location.href='/login'"
+                    class="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition">
+                    Login
+                </button>
+                <button onclick="window.location.href='/login'"
+                    class="flex-1 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition">
+                    Sign Up
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- About Section -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">About MediAI</h3>
+                    <p class="text-gray-400">
+                        MediAI is committed to revolutionizing healthcare through advanced artificial intelligence and
+                        machine learning solutions. Join us in shaping the future of health.
+                    </p>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="/" class="text-gray-400 hover:text-white transition">About</a></li>
+                        <li><a href="/" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                        <li><a href="/" class="text-gray-400 hover:text-white transition">Developer</a></li>
+                    </ul>
+                </div>
+                <!-- Contact & Social Media -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Connect with Us</h3>
+                    <ul class="space-y-2">
+                        <li class="text-gray-400">Email: sksupport@mediAI.com</li>
+                        <li class="text-gray-400">Phone: +91 99587168</li>
+                    </ul>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 text-center border-t border-gray-700 pt-4">
+                <p class="text-gray-500 text-sm">&copy; 2024 MediAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        function get_diet(path) {
+            // This would normally check if user is authenticated
+            // For now, just show the auth modal
+            // document.getElementById('authModal').classList.remove('hidden');
+            window.location.href = '/GetDiet';
+        }
+        function get_medi(path) {
+            window.location.href = '/GetMedicine';
+
+        }
+        // Close modal when clicking outside
+        document.getElementById('authModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+            }
+        });
+        // Toggle dropdown menu
+        document.getElementById("user-profile").addEventListener("click", function () {
+            const dropdown = this.querySelector("div");
+            dropdown.classList.toggle("hidden");
+        });
+    </script>
+    </script>
+</body>
+
+</html>

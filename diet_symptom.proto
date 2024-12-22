@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package diet_symptom_service;
+
+service DietPlanService {
+  rpc GenerateDietPlan (DietPlanRequest) returns (DietPlanResponse) {}
+}
+
+service SymptomPredictionService {
+  rpc PredictDisease (SymptomRequest) returns (DiseaseResponse) {}
+}
+
+message DietPlanRequest {
+  string dietary_preferences = 1;
+  string fitness_goals = 2;
+  string lifestyle_factors = 3;
+  string dietary_restrictions = 4;
+  string health_conditions = 5;
+  string user_query = 6;
+}
+
+message DietPlanResponse {
+  repeated string diet_types = 1;
+  repeated string workouts = 2;
+  repeated string breakfasts = 3;
+  repeated string dinners = 4;
+  repeated string additional_tips = 5;
+}
+
+message SymptomRequest {
+  string symptoms = 1;
+}
+
+message DiseaseResponse {
+  string predicted_disease = 1;
+  string disease_description = 2;
+  repeated string precautions = 3;
+  repeated string medications = 4;
+  repeated string recommended_diet = 5;
+  repeated string recommended_workout = 6;
+  int32 precision_score = 7;
+}

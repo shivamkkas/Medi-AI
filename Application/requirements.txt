@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+sqlalchemy
+passlib
+python-jose
+grpcio
+grpcio-tools
+pydantic
+python-multipart
+bcrypt
+sqlalchemy
+psycopg2-binary

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Weight Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .weight-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .weight-1-2 { background-color: #d4edda; color: #155724; }
+        .weight-3-4 { background-color: #fff3cd; color: #856404; }
+        .weight-5-6 { background-color: #ffeeba; color: #856404; }
+        .weight-7-plus { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Symptom Weight Table</h1>
+        <input type="text" id="searchInput" placeholder="Search symptoms...">
+        <table>
+            <thead>
+                <tr>
+                    <th>Symptom Name</th>
+                    <th>Weight</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for symptom in symptoms %}
+                <tr>
+                    <td>{{ symptom.name }}</td>
+                    <td>
+                        <span class="weight-badge 
+                            {% if symptom.weight <= 2 %}weight-1-2
+                            {% elif symptom.weight <= 4 %}weight-3-4
+                            {% elif symptom.weight <= 6 %}weight-5-6
+                            {% else %}weight-7-plus
+                            {% endif %}">
+                            {{ symptom.weight }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Simple client-side filtering
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const symptomName = row.querySelector('td:first-child').textContent.toLowerCase();
+                row.style.display = symptomName.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Brand Logo -->
+                <div class="flex items-center">
+                    <i class="fas fa-heartbeat text-3xl text-blue-600"></i>
+                    <span class="ml-3 text-2xl font-bold text-gray-800">MediAI</span>
+                </div>
+
+                <!-- User Profile -->
+                <div class="flex items-center space-x-4">
+                    {% if user_data %}
+                    <button class="flex items-center space-x-2 focus:outline-none">
+                        <img src="static/avtaar.avif" alt="User Avatar" class="w-10 h-10 rounded-full border border-gray-300">
+                        <span class="text-gray-800 font-medium">{{ user_data.username }}</span>
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Editable Profile Section -->
+    <div class="container mx-auto px-6 py-10">
+        <div class="bg-white shadow-lg rounded-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Edit Profile</h2>
+            <form action="/profile" method="POST">
+                <!-- Full Name -->
+                <div class="mb-4">
+                    <label for="full_name" class="block text-gray-800 font-medium">Full Name</label>
+                    <input 
+                        type="text" 
+                        id="full_name" 
+                        name="full_name" 
+                        placeholder="Enter your full name" 
+                        value="{{ user_data['full_name'] if user_data['full_name'] else '' }}" 
+                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    >
+                </div>
+
+                <!-- Age -->
+                <div class="mb-4">
+                    <label for="age" class="block text-gray-800 font-medium">Age</label>
+                    <input 
+                        type="number" 
+                        id="age" 
+                        name="age" 
+                        placeholder="Enter your age" 
+                        value="{{ user_data['age'] if user_data['age'] != 0 else '' }}" 
+                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    >
+                </div>
+
+                <!-- Bio -->
+                <div class="mb-4">
+                    <label for="bio" class="block text-gray-800 font-medium">Bio</label>
+                    <textarea 
+                        id="bio" 
+                        name="bio" 
+                        placeholder="Tell us about yourself" 
+                        rows="4" 
+                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600">{{ user_data['bio'] if user_data['bio'] else '' }}</textarea>
+                </div>
+
+                <!-- Health Conditions -->
+                <div class="mb-6">
+                    <label for="health_conditions" class="block text-gray-800 font-medium">Health Conditions</label>
+                    <input 
+                        type="text" 
+                        id="health_conditions" 
+                        name="health_conditions" 
+                        placeholder="List your health conditions" 
+                        value="{{ user_data['health_conditions'] if user_data['health_conditions'] else '' }}" 
+                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    >
+                </div>
+
+                <!-- Save Button -->
+                <div class="flex justify-end">
+                    <button 
+                        type="submit" 
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-800 transition">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+            {% if res %}
+            <div class="mb-4">
+                <div 
+                    class="px-4 py-2 rounded-lg 
+                    {{ 'bg-green-100 text-green-800' if message['type'] == 'success' else 'bg-red-100 text-red-800' }}">
+                    {{ res['message'] }}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>

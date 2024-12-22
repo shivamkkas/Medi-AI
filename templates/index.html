@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MediAI - Intelligent Healthcare Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .hero-gradient {
+            background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+        }
+
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .popup-card {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .popup-card:hover {
+            transform: scale(1.08);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+        }
+
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .popup-card {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .popup-card:hover {
+            transform: scale(1.08);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .section-gradient {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+    <!-- Search Overlay -->
+    <div id="searchOverlay" class="fixed inset-0 z-50 search-overlay hidden">
+        <div class="container mx-auto px-4 pt-20">
+            <div class="relative max-w-3xl mx-auto">
+                <input type="text" id="searchInput"
+                    class="w-full px-6 py-4 text-xl border-2 border-blue-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="Search for health topics, features, or articles...">
+                <button id="closeSearch" class="absolute right-4 top-4 text-gray-500 hover:text-gray-800">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <!-- Search Results -->
+            <div id="searchResults" class="max-w-3xl mx-auto mt-8 space-y-4">
+                <!-- Results will be dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <i class="fas fa-heartbeat text-3xl text-blue-600 mr-3"></i>
+                <h1 class="text-2xl font-bold text-gray-800">MediAI</h1>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center space-x-6">
+                <button id="home" class="text-blue-600 hover:text-blue-800 transition">Home</button>
+                <button id="about" class="text-blue-600 hover:text-blue-800 transition">About</button>
+                <button id="blog" class="text-blue-600 hover:text-blue-800 transition">Blog</button>
+                <button id="developer" class="text-blue-600 hover:text-blue-800 transition">Developer</button>
+                <button onclick="window.location.href='/contactus'" class="text-blue-600 hover:text-blue-800 transition">Contact-Us</button>
+            </div>
+
+
+            <div class="flex items-center space-x-4">
+                <button id="searchBtn" class="text-gray-600 hover:text-blue-600 transition">
+                    <i class="fas fa-search text-xl"></i>
+                </button>
+                <button id="learnMoreBtn" class="text-blue-600 hover:text-blue-800 transition">
+                    Learn More
+                </button>
+                <!-- User Profile Button (Hidden by default) -->
+                <div id="user-profile" class="relative">
+                    {% if user_data %}
+                    <div class="relative" id="profileDropdown">
+                        <button class="flex items-center space-x-2 focus:outline-none" id="profileButton">
+                            <img src="static\avtaar.avif" alt="User Avatar"
+                                class="w-10 h-10 rounded-full border border-gray-300">
+                            <span class="text-gray-800 font-medium">{{ user_data['username'] }}</span>
+                            <i class="fas fa-chevron-down text-gray-600"></i>
+                        </button>
+
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden"
+                            id="dropdownMenu">
+                            <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+                            <a href="/settings" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Settings</a>
+                            <a href="/logout" class="block px-4 py-2 text-red-600 hover:bg-red-100">Logout</a>
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- Get Started Button (Shown by default) -->
+                    <button id="authTriggerBtn"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">
+                        Get Started
+                    </button>
+                    {% endif %}
+                    <!-- Dropdown Menu -->
+                    <!-- <div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2">
+                        <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+                        <a href="/settings" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Settings</a>
+                        <a href="/logout" class="block px-4 py-2 text-red-600 hover:bg-red-100">Logout</a>
+                    </div> -->
+
+                </div>
+            </div>
+    </nav>
+
+
+    <!-- Hero Section -->
+    <div class="flex-grow container mx-auto px-4 pt-24 pb-12 grid md:grid-cols-2 gap-8 items-center">
+        <div class="space-y-6">
+            <h2 class="text-5xl font-bold text-gray-900 leading-tight">
+                AI-Powered Healthcare <br />
+                <span class="text-blue-600">Intelligent Solutions</span>
+            </h2>
+            <p class="text-xl text-gray-600">
+                Revolutionizing healthcare with cutting-edge artificial intelligence,
+                providing personalized, precise, and predictive medical insights.
+            </p>
+            <div class="flex space-x-4">
+                <button id="featuresBtn" onclick="window.location.href='/userprofile'"
+                    class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition flex items-center">
+                    <i class="fas fa-server mr-2"></i> Features
+                </button>
+                <button id="demoBtn"
+                    class="border-2 border-blue-600 text-blue-600 px-6 py-3 rounded-full hover:bg-blue-50 transition flex items-center">
+                    <i class="fas fa-play-circle mr-2"></i> Watch Demo
+                </button>
+            </div>
+        </div>
+
+        <div class="relative">
+            <div class="hero-gradient absolute -inset-4 rounded-3xl opacity-20 blur-3xl"></div>
+            <img src="/static/smart-healthcare-technology-template_53876-117499.avif" alt="AI Healthcare Visualization"
+                class="relative z-10 rounded-3xl shadow-2xl">
+        </div>
+    </div>
+    <!-- About Section -->
+    <div id="aboutsection" class="bg-white py-16">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="section-gradient text-white p-8 text-center">
+                    <h2 class="text-3xl font-bold mb-4">About Health Tech Companion</h2>
+                    <p class="text-lg">Empowering Healthcare through Intelligent Technology</p>
+                </div>
+
+                <div class="p-8">
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Our Mission</h3>
+                        <p class="text-gray-600">We are dedicated to leveraging artificial intelligence and machine
+                            learning to revolutionize healthcare accessibility and understanding. Our goal is to empower
+                            individuals with intelligent, personalized health insights.</p>
+                    </div>
+
+                    <div class="bg-blue-50 rounded-xl p-6 mb-8">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Technology Stack</h3>
+                        <ul class="space-y-2 text-gray-600">
+                            <li><strong>Backend:</strong> Flask Web Framework</li>
+                            <li><strong>Machine Learning:</strong> Python Scikit-learn</li>
+                            <li><strong>Frontend:</strong> Modern JavaScript & Tailwind CSS</li>
+                            <li><strong>ML Model:</strong> Decision Tree Classifier</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blog Section -->
+    <div id="blogsection" class="bg-gray-50 py-16">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="section-gradient text-white p-8 text-center">
+                    <h2 class="text-3xl font-bold mb-4">Latest from Our Blog</h2>
+                    <p class="text-lg">Insights and Updates in Healthcare Technology</p>
+                </div>
+
+                <div class="p-8">
+                    <article class="mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Building a Symptom-Based Disease Diagnosis Web
+                            App</h3>
+                        <p class="text-gray-600 mb-4">In the rapidly evolving landscape of digital health, our Health
+                            Care Companion represents a breakthrough in accessible medical information. By combining
+                            cutting-edge machine learning with user-friendly design, we've created a platform that
+                            brings healthcare insights directly to users.</p>
+
+                        <div class="bg-blue-50 rounded-xl p-6">
+                            <h4 class="text-xl font-bold text-gray-800 mb-4">Key Features</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li>Symptom-based disease prediction</li>
+                                <li>Real-time medical insights</li>
+                                <li>Personalized health recommendations</li>
+                                <li>User-friendly interface</li>
+                            </ul>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Developer Section -->
+    <div id="developersection" class="bg-white py-16">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="section-gradient text-white p-8 text-center">
+                    <h2 class="text-3xl font-bold mb-4">Meet the Developer</h2>
+                    <p class="text-lg">Shivam Kashyap - AI & Machine Learning Engineer</p>
+                </div>
+
+                <div class="p-8">
+                    <p class="text-gray-600 mb-6">In the dynamic world of technology and innovation, I am dedicated to
+                        leveraging artificial intelligence to create meaningful solutions that transform healthcare
+                        accessibility and understanding.</p>
+
+                    <div class="bg-blue-50 rounded-xl p-6 mb-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Expertise</h3>
+                        <ul class="space-y-2 text-gray-600">
+                            <li><strong>Technical Skills:</strong> Machine Learning, AI Development, Predictive Modeling
+                            </li>
+                            <li><strong>Programming Languages:</strong> Python, Machine Learning Frameworks</li>
+                            <li><strong>Domain Focus:</strong> Healthcare Technology, Intelligent Systems</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Vision and Impact</h3>
+                        <ul class="space-y-2 text-gray-600">
+                            <li>Democratizing health information</li>
+                            <li>Creating intelligent, user-centric solutions</li>
+                            <li>Bridging technological innovation with healthcare needs</li>
+                            <li>Empowering individuals through knowledge</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Learn More Section -->
+    <div id="learnMoreSection" class="bg-white py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center text-gray-900 mb-12">Why Choose MediAI?</h2>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-blue-50 rounded-xl p-6 hover:shadow-lg transition">
+                    <div class="text-blue-600 text-3xl mb-4">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Advanced AI Technology</h3>
+                    <p class="text-gray-600">
+                        Leveraging state-of-the-art artificial intelligence to provide accurate medical insights and
+                        predictions.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bg-blue-50 rounded-xl p-6 hover:shadow-lg transition">
+                    <div class="text-blue-600 text-3xl mb-4">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Data Security</h3>
+                    <p class="text-gray-600">
+                        Your health data is protected with enterprise-grade security and encryption protocols.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-blue-50 rounded-xl p-6 hover:shadow-lg transition">
+                    <div class="text-blue-600 text-3xl mb-4">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Real-time Analytics</h3>
+                    <p class="text-gray-600">
+                        Monitor and analyze health metrics in real-time with powerful analytical tools.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Modal -->
+    <div id="authModal" class="fixed inset-0 z-50 hidden modal-overlay items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-md popup-card p-8 relative shadow-2xl">
+            <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <h3 class="text-3xl font-bold text-gray-800">Welcome to MediAI</h3>
+                <p class="text-gray-600 mt-2">Your intelligent healthcare companion</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <button id="signupModalBtn"
+                    class="bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition flex items-center justify-center">
+                    <i class="fas fa-user-plus mr-2"></i> Sign Up
+                </button>
+                <button id="loginModalBtn"
+                    class="bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition flex items-center justify-center">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Login
+                </button>
+            </div>
+
+            <div class="text-center text-gray-500">
+                <p>Secure, private, and intelligent healthcare management</p>
+            </div>
+        </div>
+    </div>
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- About Section -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">About MediAI</h3>
+                    <p class="text-gray-400">
+                        MediAI is committed to revolutionizing healthcare through advanced artificial intelligence and
+                        machine learning solutions. Join us in shaping the future of health.
+                    </p>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="/" class="text-gray-400 hover:text-white transition">About</a></li>
+                        <li><a href="/" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                        <li><a href="/" class="text-gray-400 hover:text-white transition">Developer</a></li>
+                    </ul>
+                </div>
+                <!-- Contact & Social Media -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Connect with Us</h3>
+                    <ul class="space-y-2">
+                        <li class="text-gray-400">Email: sksupport@mediAI.com</li>
+                        <li class="text-gray-400">Phone: +91 9958716848</li>
+                    </ul>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 text-center border-t border-gray-700 pt-4">
+                <p class="text-gray-500 text-sm">&copy; 2024 MediAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+       document.addEventListener('DOMContentLoaded', function() {
+        // Cache DOM elements
+        const authTriggerBtn = document.getElementById('authTriggerBtn');
+        const authModal = document.getElementById('authModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const signupModalBtn = document.getElementById('signupModalBtn');
+        const loginModalBtn = document.getElementById('loginModalBtn');
+        const learnMoreBtn = document.getElementById('learnMoreBtn');
+        const learnMoreSection = document.getElementById('learnMoreSection');
+        const aboutmorebtn = document.getElementById('about');
+        const aboutmoresection = document.getElementById('aboutsection');
+        const developermorebtn = document.getElementById('developer');
+        const developermoresection = document.getElementById('developersection');
+        const blogmorebtn = document.getElementById('blog');
+        const blogmoresection = document.getElementById('blogsection');
+        const searchBtn = document.getElementById('searchBtn');
+        const searchOverlay = document.getElementById('searchOverlay');
+        const closeSearch = document.getElementById('closeSearch');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const profileButton = document.getElementById('profileButton');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        // Auth Modal functionality
+        function toggleModal() {
+            authModal.classList.toggle('hidden');
+            authModal.classList.toggle('flex');
+        }
+
+        if (authTriggerBtn) {
+            authTriggerBtn.addEventListener('click', toggleModal);
+        }
+
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', toggleModal);
+        }
+
+        // Prevent modal close when clicking inside
+        if (authModal) {
+            authModal.addEventListener('click', (e) => {
+                if (e.target === authModal) {
+                    toggleModal();
+                }
+            });
+        }
+
+        // Smooth scroll functionality
+        if (learnMoreBtn && learnMoreSection) {
+            learnMoreBtn.addEventListener('click', () => {
+                learnMoreSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        if (aboutmorebtn && aboutmoresection) {
+            aboutmorebtn.addEventListener('click', () => {
+                aboutmoresection.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        if (developermorebtn && developermoresection) {
+            developermorebtn.addEventListener('click', () => {
+                developermoresection.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        if (blogmorebtn && blogmoresection) {
+            blogmorebtn.addEventListener('click', () => {
+                blogmoresection.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        // Auth navigation
+        if (signupModalBtn) {
+            signupModalBtn.addEventListener('click', () => {
+                window.location.href = '/login';
+            });
+        }
+
+        if (loginModalBtn) {
+            loginModalBtn.addEventListener('click', () => {
+                window.location.href = '/login';
+            });
+        }
+
+        // Search functionality
+        if (searchBtn && searchOverlay && searchInput) {
+            searchBtn.addEventListener('click', () => {
+                searchOverlay.classList.remove('hidden');
+                searchInput.focus();
+            });
+        }
+
+        if (closeSearch) {
+            closeSearch.addEventListener('click', () => {
+                searchOverlay.classList.add('hidden');
+                searchInput.value = '';
+                searchResults.innerHTML = '';
+            });
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener('input', async (e) => {
+                const query = e.target.value;
+                if (query.length > 2) {
+                    // Simulate search results
+                    const results = [
+                        { title: 'AI in Healthcare', type: 'Article' },
+                        { title: 'Medical Data Security', type: 'Feature' },
+                        { title: 'Healthcare Analytics', type: 'Topic' }
+                    ].filter(item => item.title.toLowerCase().includes(query.toLowerCase()));
+
+                    // Display results
+                    searchResults.innerHTML = results.map(result => `
+                        <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-semibold text-gray-900">${result.title}</h3>
+                                <span class="text-sm text-blue-600 bg-blue-50 px-2 py-1 rounded">${result.type}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    searchResults.innerHTML = '';
+                }
+            });
+        }
+
+        // Profile dropdown functionality
+        if (profileButton && dropdownMenu) {
+            profileButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('hidden');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!dropdownMenu.contains(e.target) && !profileButton.contains(e.target)) {
+                    dropdownMenu.classList.add('hidden');
+                }
+            });
+        }
+    });
+    </script>
+</body>
+
+</html>
